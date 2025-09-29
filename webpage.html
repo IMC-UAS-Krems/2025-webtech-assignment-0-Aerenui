@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple web page</title>
+    <style>
+      body {
+        background-color: #3b4148;
+      }
+      p, h1, h2, h3, a, * { 
+        color: whitesmoke; 
+      }
+      .navbar_root {
+        background-color: #444b52bd;
+      }
+      .navbar_item {
+        background-color: transparent;
+        color: whitesmoke;
+        border-color: #5f656b7e;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px;
+        text-align: center;
+        padding: 10px;
+        /* margin: 1px; */
+        margin-bottom: 2px;
+        margin-top: 2px;
+        margin-left: 0;
+        margin-right: 0;
+      }
+      .navbar_item:hover {
+        background-color: #4f76a4;
+      }
+      .content {
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body style="margin: 0;">
+    <script>
+      var current = 0;
+      const navbar_item_range_end = 4;
+
+      function load_prev() {
+        var c = document.cookie;
+        var cc = c.split(";").map((v,_) => v.trim());
+        cc.forEach(cookie => {
+          var ls = cookie.split("=", limit=2).map((v) => v.trim());
+          var key = ls[0];
+          var value = ls[1];
+          if(key.localeCompare("page") == 0) {
+            try {
+              var p = Number(value);
+              if(p == NaN) {
+                p = 0;
+              }
+              current = p;
+              document.cookie = "page=" + p + "; expires=Thu, 18 Dec 2026 12:00:00 UTC";
+            } catch (e) {
+              // console.error("failed to parse cookie");
+              current = 0;
+              document.cookie = "page=0; expires=Thu, 18 Dec 2026 12:00:00 UTC";;
+            }
+            return;
+          }
+        });
+      }
+
+      function update_cookie() {
+        document.cookie = "page=" + current + "; expires=Thu, 18 Dec 2026 12:00:00 UTC";;
+      }
+
+      window.onload = () => {
+        load_prev();
+        update_navbar();
+        update_content();
+      };
+
+      function update_navbar() {
+        for(var i=0;i<navbar_item_range_end; i++) {
+          var item = document.querySelector(".item_" + i);
+          if(i == current) {
+            item.style["text-decoration"] = "underline";
+          } else {
+            item.style["text-decoration"] = "none";
+          }
+        }
+      }
+
+      function update_content() {
+        for(var i=0;i<navbar_item_range_end; i++) {
+          var item = document.querySelector(".content_" + i);
+          if(i == current) {
+            item.style["display"] = "inherit"
+          } else {
+            item.style["display"] = "none"
+          }
+        }
+      }
+
+      function clicked(v) {
+        current = v;
+        update_content();
+        update_navbar();
+        update_cookie();
+      }
+    </script>
+  	<nav style="overflow: hidden; display: grid; position: fixed; top: 0; width: 100%;">
+  		<div class="navbar_root" style="display: block;">
+        <div style="float: left;">
+          <button class="navbar_item item_0" onclick="clicked(0)">home</button>
+          <button class="navbar_item item_1" onclick="clicked(1)">page</button>
+          <button class="navbar_item item_2" onclick="clicked(2)">another page</button>
+        </div>
+        <div style="float: right;">
+          <button class="navbar_item  item_3" onclick="clicked(3)">about</button>
+        </div>
+      </div>
+  	</nav>
+    <div style="height: 30px; visibility: hidden;"></div>
+    <div class="content content_0">
+      <h1>Hello World</h1>
+      <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sollicitudin porttitor hendrerit. Nulla tellus leo, luctus et venenatis vel, tincidunt vel ipsum. Cras congue nunc sed leo elementum convallis. Quisque gravida eu turpis eget porttitor. Suspendisse facilisis leo ut erat luctus, ut tempus ipsum convallis. Ut lacinia vitae lacus eget maximus. Vestibulum condimentum elementum auctor. In ac elementum orci. Integer a sapien nibh. Morbi elementum felis id sem vulputate ultrices. </p>
+      <p> Vivamus id sodales enim. In efficitur eros nec velit porttitor scelerisque. Proin volutpat leo a quam finibus porta. Etiam a finibus mauris. Sed lacinia feugiat dui, bibendum blandit dui. Suspendisse bibendum elit vitae ipsum finibus bibendum. Pellentesque urna elit, tempor sed rutrum at, hendrerit a ante. Duis ac faucibus odio. Fusce accumsan vulputate mattis. Mauris est justo, sagittis eu euismod eu, volutpat ac purus. Sed posuere consequat libero ac egestas. Pellentesque tincidunt nec sem id feugiat. </p>
+      <p> Fusce scelerisque efficitur libero, sed feugiat est malesuada quis. Aliquam erat volutpat. Praesent ultrices ligula vitae sem sollicitudin, quis accumsan mi lacinia. Praesent turpis tortor, sodales in ultrices nec, blandit nec justo. Etiam nibh ipsum, aliquam sed congue quis, sodales eu ipsum. Vivamus sit amet ornare sem, id dapibus tellus. Nullam lacinia sodales velit, id imperdiet ex vestibulum nec. Pellentesque congue sapien sit amet leo congue, vel scelerisque metus interdum. Mauris venenatis ullamcorper consectetur. Phasellus placerat et ligula eu vestibulum. Curabitur non ullamcorper lectus. Sed luctus, magna a elementum lacinia, arcu risus vestibulum lectus, vel tempus ante nibh a risus. </p>
+      <p> Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris rhoncus, mauris a tempus suscipit, tortor risus interdum velit, sit amet interdum nisl lectus id nibh. Integer hendrerit efficitur leo vel rhoncus. Quisque mi sapien, vulputate bibendum congue a, dictum ut risus. Aliquam bibendum dolor quis turpis fringilla ultricies. Suspendisse in euismod neque. Suspendisse potenti. Nulla facilisi. </p>
+      <p> Morbi tellus nunc, ullamcorper non vehicula sed, venenatis eu ex. Vivamus ut commodo urna. Pellentesque lectus orci, imperdiet quis lacinia in, lobortis ac orci. Mauris porta finibus arcu, ac bibendum erat vehicula a. Nulla porta scelerisque rutrum. Proin bibendum eleifend diam ac rhoncus. In ultrices eros non elit feugiat semper. Praesent fermentum consectetur eros ac lobortis.  </p>
+    </div>
+    <div class="content content_1">
+      <h2> This is very small page.</h2>
+    </div>
+    <div class="content content_2">
+      <h3> This is very very small page.</h3>
+    </div>
+    <div class="content content_3">
+      <h3>
+        Is there someone? 
+        <br>
+        No..
+      </h3>
+    </div>
+  </body>
+</html>
